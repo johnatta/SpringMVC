@@ -16,8 +16,11 @@
     <th>Email: </th>
     <th>Endereco: </th>
     <th>Data Nascimento: </th>
-   </tr> 
-     <c:forEach var="contato" items="${dao.lista }">
+   </tr>
+     <c:forEach var="contato" items="${dao.lista }" varStatus="id">
+     <tr bgcolor="#${id.count % 2 == 0 ? 'aaee88' : 'ffffff'}" >
+     <td>${id.count}</td><td>${contato.nome } </td>
+     </tr>
   <tr>
   	<td>${contato.nome }</td>
   	<td>${contato.email }</td>
