@@ -12,8 +12,9 @@
       </head>
       
       <body>
+      <c:import url="cabecalho.jsp" />
         <jsp:useBean id="dao" class="br.com.caelum.agenda.dao.ContatoDao" />
-        <table>
+        <table border="1">
           <thead>
             <tr>
               <th>
@@ -31,12 +32,7 @@
             </tr>
             <c:forEach var="contato" items="${dao.lista }" varStatus="id">
               <tr bgcolor="#${id.count % 2 == 0 ? 'aaee88' : 'ffffff'}">
-                <td>
-                  ${id.count}
-                </td>
-                <td>
-                  ${contato.nome }
-                </td>
+                <td>${id.count}</td><td>${contato.nome }</td>
               </tr>
               <tr>
                 <td>
@@ -47,19 +43,22 @@
                     <a href="mailto:${contato.email }">${contato.email }</a>
                   </c:if>
                   <c:if test="${empty contato.email }">
-                    E-mail nao informato
+                    E-mail nao informado
                   </c:if>
                 </td>
+                
                 <td>
                   ${contato.endereco }
                 </td>
                 <td>
                   ${contato.dataNascimento.time }
                 </td>
+                
               </tr>
             </c:forEach>
           </thead>
         </table>
+        <c:import url="rodape.jsp" />
       </body>
     
     </html>
