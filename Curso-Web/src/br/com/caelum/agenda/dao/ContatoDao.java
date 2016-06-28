@@ -9,17 +9,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
 import br.com.caelum.agenda.ConnectionFactory;
 import br.com.caelum.agenda.modelo.Contato;
 
 public class ContatoDao {
 	private Connection connection;
-	
-	public ContatoDao(Connection connection) {
-		this.connection = connection;
-	}
 
 	public ContatoDao() {
 		try {
@@ -29,7 +23,9 @@ public class ContatoDao {
 		}
 	}
 
-
+	public ContatoDao(Connection connection) {
+		this.connection = connection;
+	}
 
 	public void adiciona(Contato contato) {
 		try {
@@ -47,6 +43,40 @@ public class ContatoDao {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public Contato buscaPorId(long id) {
+
+		try {
+			String sql = "select * from contatos where id=?";
+			
+			PreparedStatement stmt = this.connection
+					.prepareStatement(sql);
+
+			stmt.setLong(1, id);
+			
+			ResultSet rs = stmt.executeQuery();
+			Contato contato = new Contato();
+			
+			while (rs.next()) {
+				// popula o objeto contato
+				contato.setId(id); // Id passado no parametro.
+				contato.setNome(rs.getString("nome"));
+				contato.setEmail(rs.getString("email"));
+				contato.setEndereco(rs.getString("endereco"));
+
+				// popula a data de nascimento do contato, fazendo a conversao
+				Calendar data = Calendar.getInstance();
+				data.setTime(rs.getDate("dataNascimento"));
+				contato.setDataNascimento(data);
+			}
+			rs.close();
+			stmt.close();
+			return contato;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		
 	}
 
 	public List<Contato> getLista() {
@@ -109,35 +139,5 @@ public class ContatoDao {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-
 	}
-
-	public Contato buscaPorId(Long id) {
-
-		PreparedStatement stmt;
-		try {
-			String sql = "select * from contatos where id = ?";
-
-			stmt = this.connection.prepareStatement(sql);
-
-			stmt.setLong(1, id);
-			ResultSet rs = stmt.executeQuery();
-			Contato contato = new Contato();
-			while (rs.next()) {
-				contato.setId(id);
-				contato.setNome(rs.getString("nome"));
-				contato.setEmail(rs.getString("email"));
-				contato.setEndereco(rs.getString("endereco"));
-				// contato.setDataNascimento(rs.getString("dataNascimento"));
-			}
-			rs.close();
-			stmt.close();
-			return contato;
-
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-
-	}
-	
 }

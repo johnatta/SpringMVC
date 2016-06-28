@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="fj21-agenda1">
+    <wb-module deploy-name="Curso-Web">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="java-output-path" value="/fj21-agenda1/build/classes"/>
-        <property name="context-root" value="fj21-agenda1"/>
+        <property name="context-root" value="Curso_Web"/>
+        <property name="java-output-path" value="/Curso-Web/build/classes"/>
     </wb-module>
 </project-modules>
