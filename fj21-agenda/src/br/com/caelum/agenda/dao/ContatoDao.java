@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 import br.com.caelum.agenda.ConnectionFactory;
 import br.com.caelum.agenda.modelo.Contato;
 
@@ -35,7 +37,8 @@ public class ContatoDao {
 			stmt.setString(1, contato.getNome());
 			stmt.setString(2, contato.getEmail());
 			stmt.setString(3, contato.getEndereco());
-			stmt.setDate(4, new Date(contato.getDataNascimento().getTimeInMillis()));
+			stmt.setDate(4, new Date(contato.getDataNascimento()
+					.getTimeInMillis()));
 
 			stmt.execute();
 			stmt.close();
@@ -47,24 +50,25 @@ public class ContatoDao {
 	public List<Contato> getLista() {
 		try {
 			List<Contato> contatos = new ArrayList<Contato>();
-			PreparedStatement stmt = this.connection.prepareStatement("select * from contatos");
+			PreparedStatement stmt = this.connection
+					.prepareStatement("select * from contatos");
 
 			ResultSet rs = stmt.executeQuery();
 
-			while(rs.next()) {
+			while (rs.next()) {
 				Contato contato = new Contato();
-				//popula o objeto contato
+				// popula o objeto contato
 				contato.setId(rs.getLong("id"));
 				contato.setNome(rs.getString("nome"));
 				contato.setEmail(rs.getString("email"));
 				contato.setEndereco(rs.getString("endereco"));
 
-				//popula a data de nascimento do contato, fazendo a conversao
+				// popula a data de nascimento do contato, fazendo a conversao
 				Calendar data = Calendar.getInstance();
 				data.setTime(rs.getDate("dataNascimento"));
 				contato.setDataNascimento(data);
 
-				//adiciona o contato na lista
+				// adiciona o contato na lista
 				contatos.add(contato);
 			}
 
@@ -95,12 +99,43 @@ public class ContatoDao {
 			stmt.setString(1, contato.getNome());
 			stmt.setString(2, contato.getEmail());
 			stmt.setString(3, contato.getEndereco());
-			stmt.setDate(4, new java.sql.Date(contato.getDataNascimento().getTimeInMillis()));
+			stmt.setDate(4, new java.sql.Date(contato.getDataNascimento()
+					.getTimeInMillis()));
 			stmt.setLong(5, contato.getId());
 
 			stmt.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+
 	}
+
+	public Contato buscaPorId(Long id) {
+
+		PreparedStatement stmt;
+		try {
+			String sql = "select * from contatos where id = ?";
+
+			stmt = this.connection.prepareStatement(sql);
+
+			stmt.setLong(1, id);
+			ResultSet rs = stmt.executeQuery();
+			Contato contato = new Contato();
+			while (rs.next()) {
+				contato.setId(id);
+				contato.setNome(rs.getString("nome"));
+				contato.setEmail(rs.getString("email"));
+				contato.setEndereco(rs.getString("endereco"));
+				// contato.setDataNascimento(rs.getString("dataNascimento"));
+			}
+			rs.close();
+			stmt.close();
+			return contato;
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+	
 }
