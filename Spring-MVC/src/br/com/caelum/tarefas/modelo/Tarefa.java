@@ -2,6 +2,11 @@ package br.com.caelum.tarefas.modelo;
 
 import java.util.Calendar;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+
+
 public class Tarefa {
 	private Long id;
 	private String descricao;
@@ -15,7 +20,8 @@ public class Tarefa {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	@NotNull(message="O campo nao pode ser nulo")
+	@Size(min=20, message="O campo  precisar mais de 20 caracteres")
 	public String getDescricao() {
 		return descricao;
 	}
